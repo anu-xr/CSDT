@@ -1,7 +1,7 @@
 {
   "name": "csdt",
   "version": "1.0.0",
-  "description": "An expiremental library for allowing sites to communicate across iframes.",
+  "description": "An expiremental library for standardizing communication across iframes.",
   "author": "ryota-mitarai",
   "license": "MIT",
   "homepage": "https://github.com/ryota-mitarai/CSDT",

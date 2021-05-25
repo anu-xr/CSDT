@@ -1,6 +1,6 @@
 # Cross-Site Data Transfer
 
-An expiremental library for allowing sites to communicate across iframes.
+An expiremental library for standardizing communication across iframes.
 
 Sites include the CSDT.js script in their page, then use it as an API to send or recieve information from other pages that also implement the CSDT script.
 
