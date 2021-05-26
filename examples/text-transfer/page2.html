@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Example</title>
+    <style>
+      body {
+        background-color: pink;
+      }
+    </style>
+    <script src="../../dist/csdt.js"></script>
+  </head>
+
+  <body>
+    <h1>Page 2</h1>
+    <p>Received text:</p>
+    <p id="display"></p>
+
+    <script>
+      const display = document.getElementById('display');
+      const ydoc = window.CSDT.ydoc;
+
+      window.document.addEventListener('CSDT-y-update', () => {
+        const ytext = ydoc.getText('display');
+        display.innerHTML = ytext.toString();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "name": "text-transfer",
+  "version": "1.0.0",
+  "scripts": {
+    "serve": "parcel serve index.html"
+  },
+  "devDependencies": {
+    "parcel": "*"
+  }
+}
