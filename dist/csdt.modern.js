@@ -1,2 +1,2 @@
-import"yjs";window.CSDT=new CSDTChild;
+import"yjs";
 //# sourceMappingURL=csdt.modern.js.map

@@ -1,2 +1,2 @@
-require("yjs"),window.CSDT=new CSDTChild;
+require("yjs");
 //# sourceMappingURL=csdt.js.map

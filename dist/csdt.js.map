@@ -1,1 +1,1 @@
-{"version":3,"file":"csdt.js","sources":["../src/export.js"],"sourcesContent":["import './parent';\r\nimport './child';\r\n\r\nwindow.CSDT = new CSDTChild();\r\n"],"names":["window","CSDT","CSDTChild"],"mappings":"eAGAA,OAAOC,KAAO,IAAIC"}
+{"version":3,"file":"csdt.js","sources":[],"sourcesContent":[],"names":[],"mappings":""}
