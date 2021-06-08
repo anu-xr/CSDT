@@ -1,15 +1,15 @@
 {
   "name": "csdt",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "An expiremental library for standardizing communication across iframes.",
-  "author": "ryota-mitarai",
+  "author": "open-hubs",
   "license": "MIT",
-  "homepage": "https://github.com/ryota-mitarai/CSDT",
-  "repository": "https://github.com/ryota-mitarai/CSDT.git",
+  "homepage": "https://github.com/open-hubs/CSDT",
+  "repository": "https://github.com/open-hubs/CSDT.git",
   "files": [
     "dist/*.js*"
   ],
-  "source": "src/csdt.js",
+  "source": "src/export.js",
   "main": "dist/csdt.js",
   "exports": "dist/csdt.modern.js",
   "module": "dist/csdt.module.js",
