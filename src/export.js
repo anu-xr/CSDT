@@ -1,2 +1,2 @@
-import './parent';
-import './child';
+export * from './parent';
+export * from './child';
