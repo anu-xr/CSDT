@@ -1,2 +1,2 @@
-import*as t from"yjs";window.CSDT=new class extends class{constructor(){this.version="0.1.0",this.ydoc=new t.Doc}}{constructor(){super(),window.document.addEventListener("CSDT-check-support",()=>{const t=new CustomEvent("CSDT-response-check-support",{detail:this.version});window.parent.document.dispatchEvent(t)}),window.document.addEventListener("CSDT-y-update",e=>{t.applyUpdate(this.ydoc,e.detail)}),this.ydoc.on("update",(t,e,n,o)=>{const s=new CustomEvent("CSDT-y-update",{detail:t});window.parent.document.dispatchEvent(s)})}};
+import"yjs";window.CSDT=new CSDTChild;
 //# sourceMappingURL=csdt.modern.js.map
