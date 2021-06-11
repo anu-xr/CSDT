@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "description": "An expiremental library for standardizing communication across iframes.",
   "author": "open-hubs",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "homepage": "https://github.com/open-hubs/CSDT",
   "repository": "https://github.com/open-hubs/CSDT.git",
   "files": [
