@@ -11,21 +11,17 @@ export class CSDTChild extends Base {
       parent.document.dispatchEvent(event);
     });
 
-    //tells the parent site we have CSDT support
-    document.addEventListener('CSDT-check-support', () => {
-      const response = new CustomEvent('CSDT-response-check-support', { detail: this.version });
+    document.addEventListener('CSDT-ping', () => {
+      const response = new CustomEvent('CSDT-response-ping', { detail: Date.now() });
       parent.document.dispatchEvent(response);
     });
   }
 
-  //response to CSDT-portal-open
-  responsePortalOpen(hasReturnPortal = false, sendsThree = false, recievesThree = false) {
+  resposeConnectionOpen(connectionEstablished = false) {
     const data = {
-      hasReturnPortal: hasReturnPortal,
-      sendsThree: sendsThree,
-      recievesThree: recievesThree,
+      connectionEstablished: connectionEstablished,
     };
-    const response = new CustomEvent('CSDT-response-portal-open', { detail: data });
+    const response = new CustomEvent('CSDT-response-connection-open', { detail: data });
     parent.document.dispatchEvent(response);
   }
 }
