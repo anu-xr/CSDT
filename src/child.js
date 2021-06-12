@@ -17,7 +17,7 @@ export class CSDTChild extends Base {
     });
   }
 
-  resposeConnectionOpen(connectionEstablished = false) {
+  responseConnectionOpen(connectionEstablished = false) {
     const data = {
       connectionEstablished: connectionEstablished,
     };

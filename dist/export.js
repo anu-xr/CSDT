@@ -471,8 +471,8 @@ class CSDTParent extends _baseDefault.default {
   }
   /*returns a promise that resolves with the ping to the child site*/
   ping() {
+    const startTime = Date.now();
     return new Promise((resolve, _reject) => {
-      const startTime = Date.now();
       window.document.addEventListener('CSDT-response-ping', e => resolve(startTime - e.detail), {
         once: true
       });
@@ -494,6 +494,12 @@ class CSDTParent extends _baseDefault.default {
       });
       this.iframe.contentDocument.dispatchEvent(event);
     });
+  }
+  dispatchEvent(text, data) {
+    const event = new CustomEvent(text, {
+      detail: data
+    });
+    this.iframe.contentDocument.dispatchEvent(event);
   }
 }
 
@@ -16928,7 +16934,7 @@ class CSDTChild extends _baseDefault.default {
       parent.document.dispatchEvent(response);
     });
   }
-  resposeConnectionOpen(connectionEstablished = false) {
+  responseConnectionOpen(connectionEstablished = false) {
     const data = {
       connectionEstablished: connectionEstablished
     };
