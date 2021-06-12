@@ -9,19 +9,14 @@
   "files": [
     "dist/*.js*"
   ],
-  "source": "src/export.js",
-  "main": "dist/csdt.js",
-  "exports": "dist/csdt.modern.js",
-  "module": "dist/csdt.module.js",
-  "unpkg": "dist/csdt.umd.js",
-  "devDependencies": {
-    "microbundle": "^0.13.0"
-  },
   "scripts": {
-    "build": "microbundle",
-    "dev": "microbundle watch"
+    "build": "parcel build src/export.js",
+    "dev": "parcel watch src/export.js"
   },
   "dependencies": {
     "yjs": "^13.5.8"
+  },
+  "devDependencies": {
+    "parcel": "*"
   }
 }
