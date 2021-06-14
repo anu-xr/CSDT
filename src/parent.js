@@ -6,6 +6,7 @@ export class CSDTParent extends Base {
     super();
 
     this.iframe = iframe;
+    this.hash = Math.random().toString(36).substring(2, 15);
 
     //send ydoc updates
     this.ydoc.on('update', (update, _origin, _doc, _tr) => {
@@ -32,6 +33,7 @@ export class CSDTParent extends Base {
 
       const data = {
         connectionType: connectionType,
+        hash: this.hash,
       };
       const event = new CustomEvent('CSDT-connection-open', { detail: data });
       this.iframe.contentDocument.dispatchEvent(event);

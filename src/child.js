@@ -15,6 +15,10 @@ export class CSDTChild extends Base {
       const response = new CustomEvent('CSDT-response-ping', { detail: Date.now() });
       parent.document.dispatchEvent(response);
     });
+
+    document.addEventListener('CSDT-connection-open', (e) => {
+      this.hash = e.detail.hash;
+    });
   }
 
   responseConnectionOpen(connectionEstablished = false) {

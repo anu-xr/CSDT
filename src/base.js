@@ -5,6 +5,7 @@ export default class Base {
   constructor() {
     this.version = '0.1.0';
     this.ydoc = new Y.Doc();
+    this.hash = '';
 
     //receive ydoc updates
     document.addEventListener('CSDT-y-update', (e) => {
