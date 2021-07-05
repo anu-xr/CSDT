@@ -2,16 +2,19 @@
   "name": "csdt",
   "version": "0.1.0",
   "description": "An expiremental library for standardizing communication across iframes.",
-  "author": "open-hubs",
+  "author": "anu-xr",
   "license": "GPL-3.0-or-later",
-  "homepage": "https://github.com/open-hubs/CSDT",
-  "repository": "https://github.com/open-hubs/CSDT.git",
+  "homepage": "https://github.com/anu-xr/CSDT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anu-xr/CSDT.git"
+  },
   "files": [
     "dist/*.js*"
   ],
   "scripts": {
-    "build": "parcel build src/export.js",
-    "dev": "parcel watch src/export.js"
+    "build": "parcel build src/CSDT.js",
+    "watch": "parcel watch src/CSDT.js"
   },
   "dependencies": {
     "yjs": "^13.5.8"
