@@ -1,41 +1,27 @@
 import Base from './base';
 
-//manages connections as a parent site
+//manages a connection as a parent site
 export class CSDTParent extends Base {
   constructor(iframe) {
     super();
 
     this.iframe = iframe;
-
-    //ydoc send updates
-    this.ydoc.on('update', (update, _origin, _doc, _tr) => {
-      const event = new CustomEvent('CSDT-y-update', { detail: update });
-      this.iframe.contentDocument.dispatchEvent(event);
-    });
+    this.hash = Math.random().toString(36).substring(2, 15);
   }
 
-  //returns a promise that resolves if the child site supports CSDT
-  //resolves with the child CSDT version number
-  checkSupport() {
+  //returns a promise that resolves with a response from the child site
+  openConnection(connectionType) {
     return new Promise((resolve, _reject) => {
-      window.document.addEventListener('CSDT-response-check-support', (e) => resolve(e.detail), { once: true });
-
-      const event = new CustomEvent('CSDT-check-support');
-      this.iframe.contentDocument.dispatchEvent(event);
-    });
-  }
-
-  //returns a promise that resolves with data from the child site
-  openPortal(recievesThree = false, sendsThree = false) {
-    return new Promise((resolve, _reject) => {
-      window.document.addEventListener('CSDT-response-portal-open', (e) => resolve(e.detail), { once: true });
+      window.document.addEventListener('CSDT-response-connection-open', (e) => resolve(Boolean(e.detail)), {
+        once: true,
+      });
 
       const data = {
-        recievesThree: recievesThree,
-        sendsThree: sendsThree,
+        connectionType: String(connectionType),
+        hash: this.hash,
       };
-      const event = new CustomEvent('CSDT-portal-open', { detail: data });
-      this.iframe.contentDocument.dispatchEvent(event);
+
+      this.dispatchEvent('CSDT-connection-open', data);
     });
   }
 }
