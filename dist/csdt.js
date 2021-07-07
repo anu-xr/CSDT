@@ -140,12 +140,12 @@
       this[globalName] = mainExports;
     }
   }
-})({"UgIAA":[function(require,module,exports) {
+})({"5p6Wz":[function(require,module,exports) {
 var HMR_HOST = null;
-var HMR_PORT = 61226;
+var HMR_PORT = 53732;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
-module.bundle.HMR_BUNDLE_ID = "ee683c049a42e15cec6ee348872d7432";
+module.bundle.HMR_BUNDLE_ID = "9efd05a65559a3255aae87197b5561fd";
 // @flow
 /*global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE*/
 /*::
@@ -441,18 +441,21 @@ id) /*: string*/
   acceptedAssets[id] = true;
 }
 
-},{}],"6Xa6l":[function(require,module,exports) {
+},{}],"2pld4":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _Connection = require('./Connection');
 var _ConnectionDefault = _parcelHelpers.interopDefault(_Connection);
 var _ParentConnection = require('./ParentConnection');
 var _ParentConnectionDefault = _parcelHelpers.interopDefault(_ParentConnection);
-var _message = require('./message');
-var _messageDefault = _parcelHelpers.interopDefault(_message);
+var _Message = require('./Message');
+var _MessageDefault = _parcelHelpers.interopDefault(_Message);
+var _constants = require('./constants');
 class CSDT {
   constructor() {
-    this.messages = {};
+    this.messages = {
+      ..._constants.INTERNAL_MESSAGES
+    };
     this.connections = {
       parent: new _ParentConnectionDefault.default()
     };
@@ -467,55 +470,13 @@ class CSDT {
     delete this.connections[id];
   }
   createMessage(id, text, expectsResponse, sentDataType, responseDataType) {
-    const message = new _messageDefault.default(text, expectsResponse, sentDataType, responseDataType);
+    const message = new _MessageDefault.default(text, expectsResponse, sentDataType, responseDataType);
     this.messages[id] = message;
   }
 }
 exports.default = CSDT;
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz","./Connection":"3Wl5K","./ParentConnection":"22VJi","./message":"10Yo0"}],"2tbvz":[function(require,module,exports) {
-"use strict";
-
-exports.interopDefault = function (a) {
-  return a && a.__esModule ? a : {
-    default: a
-  };
-};
-
-exports.defineInteropFlag = function (a) {
-  Object.defineProperty(a, '__esModule', {
-    value: true
-  });
-};
-
-exports.exportAll = function (source, dest) {
-  Object.keys(source).forEach(function (key) {
-    if (key === 'default' || key === '__esModule') {
-      return;
-    } // Skip duplicate re-exports when they have the same value.
-
-
-    if (key in dest && dest[key] === source[key]) {
-      return;
-    }
-
-    Object.defineProperty(dest, key, {
-      enumerable: true,
-      get: function () {
-        return source[key];
-      }
-    });
-  });
-  return dest;
-};
-
-exports.export = function (dest, destName, get) {
-  Object.defineProperty(dest, destName, {
-    enumerable: true,
-    get: get
-  });
-};
-},{}],"3Wl5K":[function(require,module,exports) {
+},{"./Connection":"3Wl5K","./ParentConnection":"22VJi","./Message":"7sBfv","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"3Wl5K":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _yjs = require('yjs');
@@ -15001,7 +14962,49 @@ const cryptoRandomBuffer = isoCrypto !== null ? len => {
   return buf;
 };
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"1L7su":[function(require,module,exports) {
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"2tbvz":[function(require,module,exports) {
+"use strict";
+
+exports.interopDefault = function (a) {
+  return a && a.__esModule ? a : {
+    default: a
+  };
+};
+
+exports.defineInteropFlag = function (a) {
+  Object.defineProperty(a, '__esModule', {
+    value: true
+  });
+};
+
+exports.exportAll = function (source, dest) {
+  Object.keys(source).forEach(function (key) {
+    if (key === 'default' || key === '__esModule') {
+      return;
+    } // Skip duplicate re-exports when they have the same value.
+
+
+    if (key in dest && dest[key] === source[key]) {
+      return;
+    }
+
+    Object.defineProperty(dest, key, {
+      enumerable: true,
+      get: function () {
+        return source[key];
+      }
+    });
+  });
+  return dest;
+};
+
+exports.export = function (dest, destName, get) {
+  Object.defineProperty(dest, destName, {
+    enumerable: true,
+    get: get
+  });
+};
+},{}],"1L7su":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -16970,14 +16973,14 @@ _parcelHelpers.defineInteropFlag(exports);
 _parcelHelpers.export(exports, "INTERNAL_MESSAGES", function () {
   return INTERNAL_MESSAGES;
 });
-var _message = require('./message');
-var _messageDefault = _parcelHelpers.interopDefault(_message);
+var _Message = require('./Message');
+var _MessageDefault = _parcelHelpers.interopDefault(_Message);
 const INTERNAL_MESSAGES = {
-  open: new _messageDefault.default('open-connection', false, 'string', null),
-  update: new _messageDefault.default('ydoc-update', false, 'uint8array', null)
+  open: new _MessageDefault.default('open-connection', false, 'string', null),
+  update: new _MessageDefault.default('ydoc-update', false, 'uint8array', null)
 };
 
-},{"./message":"10Yo0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"10Yo0":[function(require,module,exports) {
+},{"./Message":"7sBfv","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"7sBfv":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _helpers = require('./helpers');
@@ -17052,7 +17055,7 @@ class ParentConnection {
     parent.document.dispatchEvent(event);
   }
   sendMessage(message, data) {
-    const text = message.getTextAsParent();
+    const text = message.getTextFromChild(this.hash);
     const event = new CustomEvent(text, {
       detail: data
     });
@@ -17065,7 +17068,7 @@ class ParentConnection {
         const d = message.convertResponse(e.detail);
         resolve(d);
       }, {
-        once: once
+        once: true
       });
       this.sendMessage(message, data);
     });
@@ -17074,6 +17077,6 @@ class ParentConnection {
 }
 exports.default = ParentConnection;
 
-},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["UgIAA","6Xa6l"], "6Xa6l", "parcelRequirecf62")
+},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["5p6Wz","2pld4"], "2pld4", "parcelRequirecf62")
 
-//# sourceMappingURL=csdt.js.map
+//# sourceMappingURL=CSDT.js.map
