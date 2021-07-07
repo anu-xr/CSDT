@@ -1,4 +1,4 @@
-import Message from './message';
+import Message from './Message';
 
 export const INTERNAL_MESSAGES = {
   open: new Message('open-connection', false, 'string', null),

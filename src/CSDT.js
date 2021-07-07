@@ -1,10 +1,11 @@
 import Connection from './Connection';
 import ParentConnection from './ParentConnection';
-import Message from './message';
+import Message from './Message';
+import { INTERNAL_MESSAGES } from './constants';
 
 export default class CSDT {
   constructor() {
-    this.messages = {};
+    this.messages = { ...INTERNAL_MESSAGES };
     this.connections = { parent: new ParentConnection() };
   }
 

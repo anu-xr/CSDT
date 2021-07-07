@@ -33,7 +33,7 @@ export default class ParentConnection {
   }
 
   sendMessage(message, data) {
-    const text = message.getTextAsParent();
+    const text = message.getTextFromChild(this.hash);
     const event = new CustomEvent(text, { detail: data });
     parent.document.dispatchEvent(event);
   }
@@ -48,7 +48,7 @@ export default class ParentConnection {
           resolve(d);
         },
         {
-          once: once,
+          once: true,
         }
       );
       this.sendMessage(message, data);
