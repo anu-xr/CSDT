@@ -45,19 +45,19 @@ export default class Message {
   }
 
   //onEvent functions
-  onMessageFromParent(func) {
-    document.addEventListener(this.getTextFromParent(), func, { once: true });
+  onMessageFromParent(func, once = true) {
+    document.addEventListener(this.getTextFromParent(), func, { once: once });
   }
 
-  onMessageFromChild(prefix, func) {
-    document.addEventListener(this.getTextFromChild(prefix), func, { once: true });
+  onMessageFromChild(prefix, func, once = true) {
+    document.addEventListener(this.getTextFromChild(prefix), func, { once: once });
   }
 
-  onResponseFromParent(func) {
-    document.addEventListener(this.getResponseTextFromParent(), func, { once: true });
+  onResponseFromParent(func, once = true) {
+    document.addEventListener(this.getResponseTextFromParent(), func, { once: once });
   }
 
-  onResponseFromChild(prefix, func) {
-    document.addEventListener(this.getResponseTextFromChild(prefix), func, { once: true });
+  onResponseFromChild(prefix, func, once = true) {
+    document.addEventListener(this.getResponseTextFromChild(prefix), func, { once: once });
   }
 }

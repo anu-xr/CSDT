@@ -17020,24 +17020,24 @@ class Message {
     return _helpers.convertType(data, this.responseDataType);
   }
   /*onEvent functions*/
-  onMessageFromParent(func) {
+  onMessageFromParent(func, once = true) {
     document.addEventListener(this.getTextFromParent(), func, {
-      once: true
+      once: once
     });
   }
-  onMessageFromChild(prefix, func) {
+  onMessageFromChild(prefix, func, once = true) {
     document.addEventListener(this.getTextFromChild(prefix), func, {
-      once: true
+      once: once
     });
   }
-  onResponseFromParent(func) {
+  onResponseFromParent(func, once = true) {
     document.addEventListener(this.getResponseTextFromParent(), func, {
-      once: true
+      once: once
     });
   }
-  onResponseFromChild(prefix, func) {
+  onResponseFromChild(prefix, func, once = true) {
     document.addEventListener(this.getResponseTextFromChild(prefix), func, {
-      once: true
+      once: once
     });
   }
 }
