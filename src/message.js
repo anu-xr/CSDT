@@ -4,7 +4,7 @@ export default class Message {
   constructor(text, expectsResponse, sentDataType, responseDataType) {
     this.text = String(text);
     this.expectsResponse = Boolean(expectsResponse);
-    this.responseText = this.expectsResponse === true ? `${this.text}-response` : null;
+    this.responseText = `${this.text}-response`;
     this.sentDataType = String(sentDataType);
     this.responseDataType = String(responseDataType);
   }

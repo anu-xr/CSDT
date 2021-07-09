@@ -19,9 +19,8 @@ export default class ParentConnection {
 
     //wait for parent to initialize connection
     const open = INTERNAL_MESSAGES.open;
-    document.addEventListener(open.getTextFromParent(), (data) => {
-      this.hash = open.convertSent(data);
-
+    open.onMessageFromParent((data) => {
+      this.hash = open.convertSent(data.detail);
       this.sendResponse(open);
     });
   }

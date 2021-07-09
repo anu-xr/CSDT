@@ -140,9 +140,9 @@
       this[globalName] = mainExports;
     }
   }
-})({"2NkDl":[function(require,module,exports) {
+})({"x7lPr":[function(require,module,exports) {
 var HMR_HOST = null;
-var HMR_PORT = 63894;
+var HMR_PORT = 56673;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
 module.bundle.HMR_BUNDLE_ID = "ae2b747b7aca78582a08fc7ae56b5b61";
@@ -16988,7 +16988,7 @@ class Message {
   constructor(text, expectsResponse, sentDataType, responseDataType) {
     this.text = String(text);
     this.expectsResponse = Boolean(expectsResponse);
-    this.responseText = this.expectsResponse === true ? `${this.text}-response` : null;
+    this.responseText = `${this.text}-response`;
     this.sentDataType = String(sentDataType);
     this.responseDataType = String(responseDataType);
   }
@@ -17063,8 +17063,8 @@ class ParentConnection {
     });
     // wait for parent to initialize connection
     const open = _constants.INTERNAL_MESSAGES.open;
-    document.addEventListener(open.getTextFromParent(), data => {
-      this.hash = open.convertSent(data);
+    open.onMessageFromParent(data => {
+      this.hash = open.convertSent(data.detail);
       this.sendResponse(open);
     });
   }
@@ -17098,6 +17098,6 @@ class ParentConnection {
 }
 exports.default = ParentConnection;
 
-},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["2NkDl","3PfhF"], "3PfhF", "parcelRequirecf62")
+},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["x7lPr","3PfhF"], "3PfhF", "parcelRequirecf62")
 
 //# sourceMappingURL=ConnectionManager.js.map
