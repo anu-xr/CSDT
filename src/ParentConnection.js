@@ -8,7 +8,7 @@ export default class ParentConnection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onResponse((data) => {
+    INTERNAL_MESSAGES.update.onResponseFromParent((data) => {
       Y.applyUpdate(this.ydoc, data);
     });
 

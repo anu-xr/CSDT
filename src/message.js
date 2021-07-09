@@ -43,4 +43,14 @@ export default class Message {
   convertResponse(data) {
     return convertType(data, this.responseDataType);
   }
+
+  //onEvent functions
+  onResponseFromParent(func) {
+    document.addEventListe;
+    ner(this.getResponseTextFromParent(), func, { once: true });
+  }
+
+  onResponseFromChild(prefix, func) {
+    document.addEventListener(this.getResponseTextFromChild(prefix), func, { once: true });
+  }
 }

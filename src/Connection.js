@@ -11,7 +11,7 @@ export default class Connection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onResponse((data) => {
+    INTERNAL_MESSAGES.update.onResponseFromChild(this.hash, (data) => {
       Y.applyUpdate(this.ydoc, data);
     });
 
