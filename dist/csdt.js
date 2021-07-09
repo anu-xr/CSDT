@@ -140,9 +140,9 @@
       this[globalName] = mainExports;
     }
   }
-})({"BMoB9":[function(require,module,exports) {
+})({"4lsps":[function(require,module,exports) {
 var HMR_HOST = null;
-var HMR_PORT = 50856;
+var HMR_PORT = 62314;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
 module.bundle.HMR_BUNDLE_ID = "9efd05a65559a3255aae87197b5561fd";
@@ -17021,8 +17021,7 @@ class Message {
   }
   /*onEvent functions*/
   onResponseFromParent(func) {
-    document.addEventListe;
-    ner(this.getResponseTextFromParent(), func, {
+    document.addEventListener(this.getResponseTextFromParent(), func, {
       once: true
     });
   }
@@ -17089,6 +17088,6 @@ class ParentConnection {
 }
 exports.default = ParentConnection;
 
-},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["BMoB9","2pld4"], "2pld4", "parcelRequirecf62")
+},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["4lsps","2pld4"], "2pld4", "parcelRequirecf62")
 
 //# sourceMappingURL=CSDT.js.map

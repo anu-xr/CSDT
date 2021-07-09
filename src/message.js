@@ -46,8 +46,7 @@ export default class Message {
 
   //onEvent functions
   onResponseFromParent(func) {
-    document.addEventListe;
-    ner(this.getResponseTextFromParent(), func, { once: true });
+    document.addEventListener(this.getResponseTextFromParent(), func, { once: true });
   }
 
   onResponseFromChild(prefix, func) {
