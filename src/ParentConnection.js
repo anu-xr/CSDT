@@ -8,9 +8,10 @@ export default class ParentConnection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onResponseFromParent((data) => {
+    INTERNAL_MESSAGES.update.onMessageFromParent((e) => {
+      const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
       Y.applyUpdate(this.ydoc, data);
-    });
+    }, false);
 
     //send ydoc updates
     this.ydoc.on('update', (update) => {

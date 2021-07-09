@@ -490,9 +490,10 @@ class Connection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    _constants.INTERNAL_MESSAGES.update.onResponseFromChild(this.hash, data => {
+    _constants.INTERNAL_MESSAGES.update.onMessageFromChild(this.hash, e => {
+      const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
       _yjs.applyUpdate(this.ydoc, data);
-    });
+    }, false);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);
@@ -17054,9 +17055,10 @@ class ParentConnection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    _constants.INTERNAL_MESSAGES.update.onResponseFromParent(data => {
+    _constants.INTERNAL_MESSAGES.update.onMessageFromParent(e => {
+      const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
       _yjs.applyUpdate(this.ydoc, data);
-    });
+    }, false);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);

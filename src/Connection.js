@@ -11,9 +11,14 @@ export default class Connection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onResponseFromChild(this.hash, (data) => {
-      Y.applyUpdate(this.ydoc, data);
-    });
+    INTERNAL_MESSAGES.update.onMessageFromChild(
+      this.hash,
+      (e) => {
+        const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
+        Y.applyUpdate(this.ydoc, data);
+      },
+      false
+    );
 
     //send ydoc updates
     this.ydoc.on('update', (update) => {
