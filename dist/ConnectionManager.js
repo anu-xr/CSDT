@@ -140,12 +140,12 @@
       this[globalName] = mainExports;
     }
   }
-})({"4lsps":[function(require,module,exports) {
+})({"2NkDl":[function(require,module,exports) {
 var HMR_HOST = null;
-var HMR_PORT = 62314;
+var HMR_PORT = 63894;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
-module.bundle.HMR_BUNDLE_ID = "9efd05a65559a3255aae87197b5561fd";
+module.bundle.HMR_BUNDLE_ID = "ae2b747b7aca78582a08fc7ae56b5b61";
 // @flow
 /*global HMR_HOST, HMR_PORT, HMR_ENV_HASH, HMR_SECURE*/
 /*::
@@ -441,7 +441,7 @@ id) /*: string*/
   acceptedAssets[id] = true;
 }
 
-},{}],"2pld4":[function(require,module,exports) {
+},{}],"3PfhF":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _Connection = require('./Connection');
@@ -451,7 +451,7 @@ var _ParentConnectionDefault = _parcelHelpers.interopDefault(_ParentConnection);
 var _Message = require('./Message');
 var _MessageDefault = _parcelHelpers.interopDefault(_Message);
 var _constants = require('./constants');
-class CSDT {
+class ConnectionManager {
   constructor() {
     this.messages = {
       ..._constants.INTERNAL_MESSAGES
@@ -474,7 +474,7 @@ class CSDT {
     this.messages[id] = message;
   }
 }
-exports.default = CSDT;
+exports.default = ConnectionManager;
 
 },{"./Connection":"3Wl5K","./ParentConnection":"22VJi","./Message":"7sBfv","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"3Wl5K":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
@@ -17088,6 +17088,6 @@ class ParentConnection {
 }
 exports.default = ParentConnection;
 
-},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["4lsps","2pld4"], "2pld4", "parcelRequirecf62")
+},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["2NkDl","3PfhF"], "3PfhF", "parcelRequirecf62")
 
-//# sourceMappingURL=CSDT.js.map
+//# sourceMappingURL=ConnectionManager.js.map

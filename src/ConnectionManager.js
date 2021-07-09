@@ -3,7 +3,7 @@ import ParentConnection from './ParentConnection';
 import Message from './Message';
 import { INTERNAL_MESSAGES } from './constants';
 
-export default class CSDT {
+export default class ConnectionManager {
   constructor() {
     this.messages = { ...INTERNAL_MESSAGES };
     this.connections = { parent: new ParentConnection() };
