@@ -54,7 +54,7 @@ export default class Connection {
           resolve(d);
         },
         {
-          once: once,
+          once: true,
         }
       );
       this.sendMessage(message, data);

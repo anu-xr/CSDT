@@ -527,7 +527,7 @@ class Connection {
         const d = message.convertResponse(e.detail);
         resolve(d);
       }, {
-        once: once
+        once: true
       });
       this.sendMessage(message, data);
     });
