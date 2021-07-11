@@ -140,9 +140,9 @@
       this[globalName] = mainExports;
     }
   }
-})({"x7lPr":[function(require,module,exports) {
+})({"2rZXB":[function(require,module,exports) {
 var HMR_HOST = null;
-var HMR_PORT = 56673;
+var HMR_PORT = 1234;
 var HMR_SECURE = false;
 var HMR_ENV_HASH = "d751713988987e9331980363e24189ce";
 module.bundle.HMR_BUNDLE_ID = "ae2b747b7aca78582a08fc7ae56b5b61";
@@ -476,7 +476,7 @@ class ConnectionManager {
 }
 exports.default = ConnectionManager;
 
-},{"./Connection":"3Wl5K","./ParentConnection":"22VJi","./Message":"7sBfv","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"3Wl5K":[function(require,module,exports) {
+},{"./Connection":"3Wl5K","./ParentConnection":"22VJi","./Message":"7sBfv","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"3Wl5K":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _yjs = require('yjs');
@@ -490,7 +490,7 @@ class Connection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    _constants.INTERNAL_MESSAGES.update.onMessageFromChild(this.hash, e => {
+    this.onMessage(_constants.INTERNAL_MESSAGES.update, e => {
       const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
       _yjs.applyUpdate(this.ydoc, data);
     }, false);
@@ -534,10 +534,21 @@ class Connection {
     });
     return promise;
   }
+  /*onEvent functions*/
+  onMessage(message, func, once = false) {
+    document.addEventListener(message.getTextFromChild(this.hash), func, {
+      once: once
+    });
+  }
+  onResponse(message, func, once = false) {
+    document.addEventListener(message.getResponseTextFromChild(this.hash), func, {
+      once: once
+    });
+  }
 }
 exports.default = Connection;
 
-},{"yjs":"2fXzb","./helpers":"1K0Ha","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"2fXzb":[function(require,module,exports) {
+},{"yjs":"2K3tz","./helpers":"1K0Ha","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"2K3tz":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -2105,8 +2116,6 @@ const writeStructsFromTransaction = (encoder, transaction) => writeClientsStruct
  */
 const readUpdateV2 = (decoder, ydoc, transactionOrigin, structDecoder = new UpdateDecoderV2(decoder)) =>
   transact(ydoc, transaction => {
-    // force that transaction.local is set to non-local
-    transaction.local = false;
     let retry = false;
     const doc = transaction.doc;
     const store = doc.store;
@@ -4189,39 +4198,33 @@ const mergeUpdates = updates => mergeUpdatesV2(updates, UpdateDecoderV1, UpdateE
  */
 const encodeStateVectorFromUpdateV2 = (update, YEncoder = DSEncoderV2, YDecoder = UpdateDecoderV2) => {
   const encoder = new YEncoder();
-  const updateDecoder = new LazyStructReader(new YDecoder(decoding__namespace.createDecoder(update)), false);
+  const updateDecoder = new LazyStructReader(new YDecoder(decoding__namespace.createDecoder(update)), true);
   let curr = updateDecoder.curr;
   if (curr !== null) {
-    let size = 0;
+    let size = 1;
     let currClient = curr.id.client;
-    let currClock = 0;
-    let stopCounting = curr.id.clock !== 0; // must start at 0
+    let currClock = curr.id.clock;
+    let stopCounting = false;
     for (; curr !== null; curr = updateDecoder.next()) {
-      // we ignore skips
+      if (currClient !== curr.id.client) {
+        size++;
+        // We found a new client
+        // write what we have to the encoder
+        encoding__namespace.writeVarUint(encoder.restEncoder, currClient);
+        encoding__namespace.writeVarUint(encoder.restEncoder, currClock);
+        currClient = curr.id.client;
+        stopCounting = false;
+      }
       if (curr.constructor === Skip) {
         stopCounting = true;
       }
       if (!stopCounting) {
         currClock = curr.id.clock + curr.length;
       }
-      if (currClient !== curr.id.client) {
-        if (currClock !== 0) {
-          size++;
-          // We found a new client
-          // write what we have to the encoder
-          encoding__namespace.writeVarUint(encoder.restEncoder, currClient);
-          encoding__namespace.writeVarUint(encoder.restEncoder, currClock);
-        }
-        currClient = curr.id.client;
-        stopCounting = false;
-      }
     }
     // write what we have
-    if (currClock !== 0) {
-      size++;
-      encoding__namespace.writeVarUint(encoder.restEncoder, currClient);
-      encoding__namespace.writeVarUint(encoder.restEncoder, currClock);
-    }
+    encoding__namespace.writeVarUint(encoder.restEncoder, currClient);
+    encoding__namespace.writeVarUint(encoder.restEncoder, currClock);
     // prepend the size of the state vector
     const enc = encoding__namespace.createEncoder();
     encoding__namespace.writeVarUint(enc, size);
@@ -10095,7 +10098,7 @@ exports.typeListToArraySnapshot = typeListToArraySnapshot;
 exports.typeMapGetSnapshot = typeMapGetSnapshot;
 //# sourceMappingURL=yjs.cjs.map
 
-},{"lib0/dist/observable.cjs":"2xUJ5","lib0/dist/array.cjs":"2FOJs","lib0/dist/math.cjs":"4IXVm","lib0/dist/map.cjs":"7Dg1u","lib0/dist/encoding.cjs":"1ZiVL","lib0/dist/decoding.cjs":"2gZMm","lib0/dist/random.cjs":"12xy1","lib0/dist/buffer.cjs":"1L7su","lib0/dist/error.cjs":"4UUrG","lib0/dist/binary.cjs":"1ffSb","lib0/dist/function.cjs":"9I6YH","lib0/dist/set.cjs":"1hAh3","lib0/dist/logging.cjs":"5KTPI","lib0/dist/time.cjs":"68Yql","lib0/dist/iterator.cjs":"2osaj","lib0/dist/object.cjs":"5IljW"}],"2xUJ5":[function(require,module,exports) {
+},{"lib0/dist/observable.cjs":"3y1IK","lib0/dist/array.cjs":"1XUOM","lib0/dist/math.cjs":"3MrGE","lib0/dist/map.cjs":"RAkIO","lib0/dist/encoding.cjs":"2f4G9","lib0/dist/decoding.cjs":"1RsLH","lib0/dist/random.cjs":"1EkwC","lib0/dist/buffer.cjs":"5Lodz","lib0/dist/error.cjs":"3pcdJ","lib0/dist/binary.cjs":"29PVn","lib0/dist/function.cjs":"3qwmW","lib0/dist/set.cjs":"2KNVr","lib0/dist/logging.cjs":"Eof20","lib0/dist/time.cjs":"1XfeI","lib0/dist/iterator.cjs":"6F6dS","lib0/dist/object.cjs":"7LnHk"}],"3y1IK":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -10183,7 +10186,7 @@ class Observable {
 exports.Observable = Observable;
 //# sourceMappingURL=observable.cjs.map
 
-},{"./map-28a001c9.cjs":"2GDvG","./set-7ae96d21.cjs":"1Hm0Z","./array-b2d24238.cjs":"2bdtd"}],"2GDvG":[function(require,module,exports) {
+},{"./map-28a001c9.cjs":"3eOOI","./set-7ae96d21.cjs":"6dXAE","./array-b2d24238.cjs":"5gku8"}],"3eOOI":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -10317,7 +10320,7 @@ exports.map$1 = map$1;
 exports.setIfUndefined = setIfUndefined;
 //# sourceMappingURL=map-28a001c9.cjs.map
 
-},{}],"1Hm0Z":[function(require,module,exports) {
+},{}],"6dXAE":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -10346,7 +10349,7 @@ exports.set = set;
 exports.toArray = toArray;
 //# sourceMappingURL=set-7ae96d21.cjs.map
 
-},{}],"2bdtd":[function(require,module,exports) {
+},{}],"5gku8":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -10464,7 +10467,7 @@ exports.last = last;
 exports.some = some;
 //# sourceMappingURL=array-b2d24238.cjs.map
 
-},{}],"2FOJs":[function(require,module,exports) {
+},{}],"1XUOM":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -10484,7 +10487,7 @@ exports.last = array.last;
 exports.some = array.some;
 //# sourceMappingURL=array.cjs.map
 
-},{"./array-b2d24238.cjs":"2bdtd"}],"4IXVm":[function(require,module,exports) {
+},{"./array-b2d24238.cjs":"5gku8"}],"3MrGE":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -10512,7 +10515,7 @@ exports.sign = math.sign;
 exports.sqrt = math.sqrt;
 //# sourceMappingURL=math.cjs.map
 
-},{"./math-08e068f9.cjs":"3Farx"}],"3Farx":[function(require,module,exports) {
+},{"./math-08e068f9.cjs":"2J4Qg"}],"2J4Qg":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -10615,7 +10618,7 @@ exports.sign = sign;
 exports.sqrt = sqrt;
 //# sourceMappingURL=math-08e068f9.cjs.map
 
-},{}],"7Dg1u":[function(require,module,exports) {
+},{}],"RAkIO":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -10632,7 +10635,7 @@ exports.map = map.map;
 exports.setIfUndefined = map.setIfUndefined;
 //# sourceMappingURL=map.cjs.map
 
-},{"./map-28a001c9.cjs":"2GDvG"}],"1ZiVL":[function(require,module,exports) {
+},{"./map-28a001c9.cjs":"3eOOI"}],"2f4G9":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -10683,7 +10686,7 @@ exports.writeVarUint = encoding.writeVarUint;
 exports.writeVarUint8Array = encoding.writeVarUint8Array;
 //# sourceMappingURL=encoding.cjs.map
 
-},{"./buffer-ac2cdedf.cjs":"6VMiW","./math-08e068f9.cjs":"3Farx","./number-24f1eabe.cjs":"1RrYP","./binary-ac8e39e2.cjs":"bTAV5","./string-f3c3d805.cjs":"7iFR9","./environment-7e2ffaea.cjs":"709bw","./map-28a001c9.cjs":"2GDvG","./conditions-fb475c70.cjs":"6Gbix","./storage.cjs":"1wzWf"}],"6VMiW":[function(require,module,exports) {
+},{"./buffer-ac2cdedf.cjs":"5HCTh","./math-08e068f9.cjs":"2J4Qg","./number-24f1eabe.cjs":"OlAwz","./binary-ac8e39e2.cjs":"4Rtr2","./string-f3c3d805.cjs":"43eAZ","./environment-7e2ffaea.cjs":"7hQhK","./map-28a001c9.cjs":"3eOOI","./conditions-fb475c70.cjs":"1Kr8E","./storage.cjs":"3sall"}],"5HCTh":[function(require,module,exports) {
 "use strict";
 var Buffer = require("buffer").Buffer;
 var string = require('./string-f3c3d805.cjs');
@@ -12320,7 +12323,7 @@ exports.writeVarString = writeVarString;
 exports.writeVarUint = writeVarUint;
 exports.writeVarUint8Array = writeVarUint8Array;
 
-},{"buffer":"7jWjX","./string-f3c3d805.cjs":"7iFR9","./environment-7e2ffaea.cjs":"709bw","./binary-ac8e39e2.cjs":"bTAV5","./math-08e068f9.cjs":"3Farx","./number-24f1eabe.cjs":"1RrYP"}],"7jWjX":[function(require,module,exports) {
+},{"buffer":"3susO","./string-f3c3d805.cjs":"43eAZ","./environment-7e2ffaea.cjs":"7hQhK","./binary-ac8e39e2.cjs":"4Rtr2","./math-08e068f9.cjs":"2J4Qg","./number-24f1eabe.cjs":"OlAwz"}],"3susO":[function(require,module,exports) {
 /*!
 * The buffer module from node.js, for the browser.
 *
@@ -13791,7 +13794,7 @@ var hexSliceLookupTable = (function () {
   return table;
 })();
 
-},{"base64-js":"zi0ku","ieee754":"5pVPF"}],"zi0ku":[function(require,module,exports) {
+},{"base64-js":"6UXZh","ieee754":"6YlQP"}],"6UXZh":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -13943,7 +13946,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],"5pVPF":[function(require,module,exports) {
+},{}],"6YlQP":[function(require,module,exports) {
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
@@ -14030,7 +14033,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],"7iFR9":[function(require,module,exports) {
+},{}],"43eAZ":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -14180,7 +14183,7 @@ exports.utf8ByteLength = utf8ByteLength;
 exports.utf8TextEncoder = utf8TextEncoder;
 //# sourceMappingURL=string-f3c3d805.cjs.map
 
-},{}],"709bw":[function(require,module,exports) {
+},{}],"7hQhK":[function(require,module,exports) {
 "use strict";
 var process = require("process");
 var map = require('./map-28a001c9.cjs');
@@ -14299,7 +14302,7 @@ exports.isMac = isMac;
 exports.isNode = isNode;
 exports.production = production;
 
-},{"process":"msuZS","./map-28a001c9.cjs":"2GDvG","./string-f3c3d805.cjs":"7iFR9","./conditions-fb475c70.cjs":"6Gbix","./storage.cjs":"1wzWf"}],"msuZS":[function(require,module,exports) {
+},{"process":"7AgFc","./map-28a001c9.cjs":"3eOOI","./string-f3c3d805.cjs":"43eAZ","./conditions-fb475c70.cjs":"1Kr8E","./storage.cjs":"3sall"}],"7AgFc":[function(require,module,exports) {
 // shim for using process in browser
 var process = module.exports = {};
 // cached from whatever global is present so that test runners that stub it
@@ -14474,7 +14477,7 @@ process.umask = function () {
   return 0;
 };
 
-},{}],"6Gbix":[function(require,module,exports) {
+},{}],"1Kr8E":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -14500,7 +14503,7 @@ exports.conditions = conditions;
 exports.undefinedToNull = undefinedToNull;
 //# sourceMappingURL=conditions-fb475c70.cjs.map
 
-},{}],"1wzWf":[function(require,module,exports) {
+},{}],"3sall":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -14572,7 +14575,7 @@ exports.onChange = onChange;
 exports.varStorage = varStorage;
 //# sourceMappingURL=storage.cjs.map
 
-},{}],"bTAV5":[function(require,module,exports) {
+},{}],"4Rtr2":[function(require,module,exports) {
 'use strict';
 
 /* eslint-env browser */
@@ -14803,7 +14806,7 @@ exports.BITS9 = BITS9;
 exports.binary = binary;
 //# sourceMappingURL=binary-ac8e39e2.cjs.map
 
-},{}],"1RrYP":[function(require,module,exports) {
+},{}],"OlAwz":[function(require,module,exports) {
 'use strict';
 
 var math = require('./math-08e068f9.cjs');
@@ -14851,7 +14854,7 @@ exports.isNaN = isNaN;
 exports.number = number;
 //# sourceMappingURL=number-24f1eabe.cjs.map
 
-},{"./math-08e068f9.cjs":"3Farx","./binary-ac8e39e2.cjs":"bTAV5"}],"2gZMm":[function(require,module,exports) {
+},{"./math-08e068f9.cjs":"2J4Qg","./binary-ac8e39e2.cjs":"4Rtr2"}],"1RsLH":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -14904,7 +14907,7 @@ exports.readVarUint8Array = encoding.readVarUint8Array;
 exports.skip8 = encoding.skip8;
 //# sourceMappingURL=decoding.cjs.map
 
-},{"./buffer-ac2cdedf.cjs":"6VMiW","./binary-ac8e39e2.cjs":"bTAV5","./math-08e068f9.cjs":"3Farx","./string-f3c3d805.cjs":"7iFR9","./environment-7e2ffaea.cjs":"709bw","./map-28a001c9.cjs":"2GDvG","./conditions-fb475c70.cjs":"6Gbix","./storage.cjs":"1wzWf","./number-24f1eabe.cjs":"1RrYP"}],"12xy1":[function(require,module,exports) {
+},{"./buffer-ac2cdedf.cjs":"5HCTh","./binary-ac8e39e2.cjs":"4Rtr2","./math-08e068f9.cjs":"2J4Qg","./string-f3c3d805.cjs":"43eAZ","./environment-7e2ffaea.cjs":"7hQhK","./map-28a001c9.cjs":"3eOOI","./conditions-fb475c70.cjs":"1Kr8E","./storage.cjs":"3sall","./number-24f1eabe.cjs":"OlAwz"}],"1EkwC":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -14936,7 +14939,7 @@ exports.uint32 = uint32;
 exports.uuidv4 = uuidv4;
 //# sourceMappingURL=random.cjs.map
 
-},{"./math-08e068f9.cjs":"3Farx","isomorphic.js":"1vEZw"}],"1vEZw":[function(require,module,exports) {
+},{"./math-08e068f9.cjs":"2J4Qg","isomorphic.js":"1Nvbr"}],"1Nvbr":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 _parcelHelpers.export(exports, "performance", function () {
@@ -14963,7 +14966,7 @@ const cryptoRandomBuffer = isoCrypto !== null ? len => {
   return buf;
 };
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"2tbvz":[function(require,module,exports) {
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"5gA8y":[function(require,module,exports) {
 "use strict";
 
 exports.interopDefault = function (a) {
@@ -15005,7 +15008,7 @@ exports.export = function (dest, destName, get) {
     get: get
   });
 };
-},{}],"1L7su":[function(require,module,exports) {
+},{}],"5Lodz":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15032,7 +15035,7 @@ exports.fromBase64 = encoding.fromBase64;
 exports.toBase64 = encoding.toBase64;
 //# sourceMappingURL=buffer.cjs.map
 
-},{"./string-f3c3d805.cjs":"7iFR9","./environment-7e2ffaea.cjs":"709bw","./buffer-ac2cdedf.cjs":"6VMiW","./map-28a001c9.cjs":"2GDvG","./conditions-fb475c70.cjs":"6Gbix","./storage.cjs":"1wzWf","./binary-ac8e39e2.cjs":"bTAV5","./math-08e068f9.cjs":"3Farx","./number-24f1eabe.cjs":"1RrYP"}],"4UUrG":[function(require,module,exports) {
+},{"./string-f3c3d805.cjs":"43eAZ","./environment-7e2ffaea.cjs":"7hQhK","./buffer-ac2cdedf.cjs":"5HCTh","./map-28a001c9.cjs":"3eOOI","./conditions-fb475c70.cjs":"1Kr8E","./storage.cjs":"3sall","./binary-ac8e39e2.cjs":"4Rtr2","./math-08e068f9.cjs":"2J4Qg","./number-24f1eabe.cjs":"OlAwz"}],"3pcdJ":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15046,7 +15049,7 @@ exports.methodUnimplemented = error.methodUnimplemented;
 exports.unexpectedCase = error.unexpectedCase;
 //# sourceMappingURL=error.cjs.map
 
-},{"./error-55a9a8c8.cjs":"793lQ"}],"793lQ":[function(require,module,exports) {
+},{"./error-55a9a8c8.cjs":"vmIGb"}],"vmIGb":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -15093,7 +15096,7 @@ exports.methodUnimplemented = methodUnimplemented;
 exports.unexpectedCase = unexpectedCase;
 //# sourceMappingURL=error-55a9a8c8.cjs.map
 
-},{}],"1ffSb":[function(require,module,exports) {
+},{}],"29PVn":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15169,7 +15172,7 @@ exports.BITS8 = binary.BITS8;
 exports.BITS9 = binary.BITS9;
 //# sourceMappingURL=binary.cjs.map
 
-},{"./binary-ac8e39e2.cjs":"bTAV5"}],"9I6YH":[function(require,module,exports) {
+},{"./binary-ac8e39e2.cjs":"4Rtr2"}],"3qwmW":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15189,7 +15192,7 @@ exports.id = _function.id;
 exports.nop = _function.nop;
 //# sourceMappingURL=function.cjs.map
 
-},{"./array-b2d24238.cjs":"2bdtd","./object-dcdd6eed.cjs":"6UfWj","./function-f8acb5f5.cjs":"2yVOU"}],"6UfWj":[function(require,module,exports) {
+},{"./array-b2d24238.cjs":"5gku8","./object-dcdd6eed.cjs":"4PPDU","./function-f8acb5f5.cjs":"1xK6d"}],"4PPDU":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -15314,7 +15317,7 @@ exports.object = object;
 exports.some = some;
 //# sourceMappingURL=object-dcdd6eed.cjs.map
 
-},{}],"2yVOU":[function(require,module,exports) {
+},{}],"1xK6d":[function(require,module,exports) {
 'use strict';
 
 var array = require('./array-b2d24238.cjs');
@@ -15479,7 +15482,7 @@ exports.id = id;
 exports.nop = nop;
 //# sourceMappingURL=function-f8acb5f5.cjs.map
 
-},{"./array-b2d24238.cjs":"2bdtd","./object-dcdd6eed.cjs":"6UfWj"}],"1hAh3":[function(require,module,exports) {
+},{"./array-b2d24238.cjs":"5gku8","./object-dcdd6eed.cjs":"4PPDU"}],"2KNVr":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15492,7 +15495,7 @@ exports.create = set.create;
 exports.toArray = set.toArray;
 //# sourceMappingURL=set.cjs.map
 
-},{"./set-7ae96d21.cjs":"1Hm0Z"}],"5KTPI":[function(require,module,exports) {
+},{"./set-7ae96d21.cjs":"6dXAE"}],"Eof20":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -15542,7 +15545,7 @@ exports.vconsoles = logging.vconsoles;
 exports.warn = logging.warn;
 //# sourceMappingURL=logging.cjs.map
 
-},{"./environment-7e2ffaea.cjs":"709bw","./symbol-c5caa724.cjs":"6wCBz","./pair-ab022bc3.cjs":"7t2e6","./dom-58958c04.cjs":"5ZVxg","./json-092190a1.cjs":"OW6G0","./map-28a001c9.cjs":"2GDvG","./eventloop-c60b5658.cjs":"Vcd1s","./math-08e068f9.cjs":"3Farx","./time-e00067da.cjs":"6UlYK","./function-f8acb5f5.cjs":"2yVOU","./logging-7cc36806.cjs":"3F6q6","./string-f3c3d805.cjs":"7iFR9","./conditions-fb475c70.cjs":"6Gbix","./storage.cjs":"1wzWf","./metric.cjs":"5WTtv","./array-b2d24238.cjs":"2bdtd","./object-dcdd6eed.cjs":"6UfWj"}],"6wCBz":[function(require,module,exports) {
+},{"./environment-7e2ffaea.cjs":"7hQhK","./symbol-c5caa724.cjs":"1XR4P","./pair-ab022bc3.cjs":"3SnGW","./dom-58958c04.cjs":"25KoB","./json-092190a1.cjs":"7GMKl","./map-28a001c9.cjs":"3eOOI","./eventloop-c60b5658.cjs":"4c5Mr","./math-08e068f9.cjs":"2J4Qg","./time-e00067da.cjs":"71wB0","./function-f8acb5f5.cjs":"1xK6d","./logging-7cc36806.cjs":"3tZX5","./string-f3c3d805.cjs":"43eAZ","./conditions-fb475c70.cjs":"1Kr8E","./storage.cjs":"3sall","./metric.cjs":"6jxBw","./array-b2d24238.cjs":"5gku8","./object-dcdd6eed.cjs":"4PPDU"}],"1XR4P":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -15575,7 +15578,7 @@ exports.isSymbol = isSymbol;
 exports.symbol = symbol;
 //# sourceMappingURL=symbol-c5caa724.cjs.map
 
-},{}],"7t2e6":[function(require,module,exports) {
+},{}],"3SnGW":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -15646,7 +15649,7 @@ exports.map = map;
 exports.pair = pair;
 //# sourceMappingURL=pair-ab022bc3.cjs.map
 
-},{}],"5ZVxg":[function(require,module,exports) {
+},{}],"25KoB":[function(require,module,exports) {
 'use strict';
 
 var pair = require('./pair-ab022bc3.cjs');
@@ -16018,7 +16021,7 @@ exports.setAttributesMap = setAttributesMap;
 exports.text = text;
 //# sourceMappingURL=dom-58958c04.cjs.map
 
-},{"./pair-ab022bc3.cjs":"7t2e6","./map-28a001c9.cjs":"2GDvG"}],"OW6G0":[function(require,module,exports) {
+},{"./pair-ab022bc3.cjs":"3SnGW","./map-28a001c9.cjs":"3eOOI"}],"7GMKl":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -16054,7 +16057,7 @@ exports.parse = parse;
 exports.stringify = stringify;
 //# sourceMappingURL=json-092190a1.cjs.map
 
-},{}],"Vcd1s":[function(require,module,exports) {
+},{}],"4c5Mr":[function(require,module,exports) {
 'use strict';
 
 /* global requestIdleCallback, requestAnimationFrame, cancelIdleCallback, cancelAnimationFrame */
@@ -16185,7 +16188,7 @@ exports.interval = interval;
 exports.timeout = timeout;
 //# sourceMappingURL=eventloop-c60b5658.cjs.map
 
-},{}],"6UlYK":[function(require,module,exports) {
+},{}],"71wB0":[function(require,module,exports) {
 'use strict';
 
 var metric = require('./metric.cjs');
@@ -16250,7 +16253,7 @@ exports.humanizeDuration = humanizeDuration;
 exports.time = time;
 //# sourceMappingURL=time-e00067da.cjs.map
 
-},{"./metric.cjs":"5WTtv","./math-08e068f9.cjs":"3Farx"}],"5WTtv":[function(require,module,exports) {
+},{"./metric.cjs":"6jxBw","./math-08e068f9.cjs":"2J4Qg"}],"6jxBw":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -16335,7 +16338,7 @@ exports.zepto = zepto;
 exports.zetta = zetta;
 //# sourceMappingURL=metric.cjs.map
 
-},{"./math-08e068f9.cjs":"3Farx"}],"3F6q6":[function(require,module,exports) {
+},{"./math-08e068f9.cjs":"2J4Qg"}],"3tZX5":[function(require,module,exports) {
 'use strict';
 
 var environment = require('./environment-7e2ffaea.cjs');
@@ -16799,7 +16802,7 @@ exports.vconsoles = vconsoles;
 exports.warn = warn;
 //# sourceMappingURL=logging-7cc36806.cjs.map
 
-},{"./environment-7e2ffaea.cjs":"709bw","./symbol-c5caa724.cjs":"6wCBz","./pair-ab022bc3.cjs":"7t2e6","./dom-58958c04.cjs":"5ZVxg","./json-092190a1.cjs":"OW6G0","./map-28a001c9.cjs":"2GDvG","./eventloop-c60b5658.cjs":"Vcd1s","./math-08e068f9.cjs":"3Farx","./time-e00067da.cjs":"6UlYK","./function-f8acb5f5.cjs":"2yVOU"}],"68Yql":[function(require,module,exports) {
+},{"./environment-7e2ffaea.cjs":"7hQhK","./symbol-c5caa724.cjs":"1XR4P","./pair-ab022bc3.cjs":"3SnGW","./dom-58958c04.cjs":"25KoB","./json-092190a1.cjs":"7GMKl","./map-28a001c9.cjs":"3eOOI","./eventloop-c60b5658.cjs":"4c5Mr","./math-08e068f9.cjs":"2J4Qg","./time-e00067da.cjs":"71wB0","./function-f8acb5f5.cjs":"1xK6d"}],"1XfeI":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -16815,7 +16818,7 @@ exports.getUnixTime = time.getUnixTime;
 exports.humanizeDuration = time.humanizeDuration;
 //# sourceMappingURL=time.cjs.map
 
-},{"./metric.cjs":"5WTtv","./math-08e068f9.cjs":"3Farx","./time-e00067da.cjs":"6UlYK"}],"2osaj":[function(require,module,exports) {
+},{"./metric.cjs":"6jxBw","./math-08e068f9.cjs":"2J4Qg","./time-e00067da.cjs":"71wB0"}],"6F6dS":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -16830,7 +16833,7 @@ exports.iteratorMap = iterator.iteratorMap;
 exports.mapIterator = iterator.mapIterator;
 //# sourceMappingURL=iterator.cjs.map
 
-},{"./iterator-fe01d209.cjs":"2JyV5"}],"2JyV5":[function(require,module,exports) {
+},{"./iterator-fe01d209.cjs":"3Eq8y"}],"3Eq8y":[function(require,module,exports) {
 'use strict';
 
 /**
@@ -16913,7 +16916,7 @@ exports.iteratorMap = iteratorMap;
 exports.mapIterator = mapIterator;
 //# sourceMappingURL=iterator-fe01d209.cjs.map
 
-},{}],"5IljW":[function(require,module,exports) {
+},{}],"7LnHk":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, '__esModule', { value: true });
@@ -16934,7 +16937,7 @@ exports.map = object.map;
 exports.some = object.some;
 //# sourceMappingURL=object.cjs.map
 
-},{"./object-dcdd6eed.cjs":"6UfWj"}],"1K0Ha":[function(require,module,exports) {
+},{"./object-dcdd6eed.cjs":"4PPDU"}],"1K0Ha":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 _parcelHelpers.export(exports, "addIframe", function () {
@@ -16968,7 +16971,7 @@ function convertType(data, type) {
   return null;
 }
 
-},{"@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"5vBc0":[function(require,module,exports) {
+},{"@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"5vBc0":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 _parcelHelpers.export(exports, "INTERNAL_MESSAGES", function () {
@@ -16981,7 +16984,7 @@ const INTERNAL_MESSAGES = {
   update: new _MessageDefault.default('ydoc-update', false, 'uint8array', null)
 };
 
-},{"./Message":"7sBfv","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"7sBfv":[function(require,module,exports) {
+},{"./Message":"7sBfv","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"7sBfv":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _helpers = require('./helpers');
@@ -17020,31 +17023,10 @@ class Message {
   convertResponse(data) {
     return _helpers.convertType(data, this.responseDataType);
   }
-  /*onEvent functions*/
-  onMessageFromParent(func, once = true) {
-    document.addEventListener(this.getTextFromParent(), func, {
-      once: once
-    });
-  }
-  onMessageFromChild(prefix, func, once = true) {
-    document.addEventListener(this.getTextFromChild(prefix), func, {
-      once: once
-    });
-  }
-  onResponseFromParent(func, once = true) {
-    document.addEventListener(this.getResponseTextFromParent(), func, {
-      once: once
-    });
-  }
-  onResponseFromChild(prefix, func, once = true) {
-    document.addEventListener(this.getResponseTextFromChild(prefix), func, {
-      once: once
-    });
-  }
 }
 exports.default = Message;
 
-},{"./helpers":"1K0Ha","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}],"22VJi":[function(require,module,exports) {
+},{"./helpers":"1K0Ha","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"22VJi":[function(require,module,exports) {
 var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _yjs = require('yjs');
@@ -17055,7 +17037,7 @@ class ParentConnection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    _constants.INTERNAL_MESSAGES.update.onMessageFromParent(e => {
+    this.onMessage(_constants.INTERNAL_MESSAGES.update, e => {
       const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
       _yjs.applyUpdate(this.ydoc, data);
     }, false);
@@ -17065,7 +17047,7 @@ class ParentConnection {
     });
     // wait for parent to initialize connection
     const open = _constants.INTERNAL_MESSAGES.open;
-    open.onMessageFromParent(data => {
+    this.onMessage(open, data => {
       this.hash = open.convertSent(data.detail);
       this.sendResponse(open);
     });
@@ -17097,9 +17079,20 @@ class ParentConnection {
     });
     return promise;
   }
+  /*onEvent functions*/
+  onMessage(message, func, once = false) {
+    document.addEventListener(message.getTextFromParent(), func, {
+      once: once
+    });
+  }
+  onResponse(message, func, once = false) {
+    document.addEventListener(message.getResponseTextFromParent(), func, {
+      once: once
+    });
+  }
 }
 exports.default = ParentConnection;
 
-},{"yjs":"2fXzb","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"2tbvz"}]},["x7lPr","3PfhF"], "3PfhF", "parcelRequirecf62")
+},{"yjs":"2K3tz","./constants":"5vBc0","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}]},["2rZXB","3PfhF"], "3PfhF", "parcelRequirecf62")
 
 //# sourceMappingURL=ConnectionManager.js.map

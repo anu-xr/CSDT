@@ -11,8 +11,8 @@ export default class Connection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onMessageFromChild(
-      this.hash,
+    this.onMessage(
+      INTERNAL_MESSAGES.update,
       (e) => {
         const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
         Y.applyUpdate(this.ydoc, data);
@@ -65,5 +65,14 @@ export default class Connection {
       this.sendMessage(message, data);
     });
     return promise;
+  }
+
+  //onEvent functions
+  onMessage(message, func, once = false) {
+    document.addEventListener(message.getTextFromChild(this.hash), func, { once: once });
+  }
+
+  onResponse(message, func, once = false) {
+    document.addEventListener(message.getResponseTextFromChild(this.hash), func, { once: once });
   }
 }

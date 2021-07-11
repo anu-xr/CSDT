@@ -8,10 +8,14 @@ export default class ParentConnection {
     this.connectionOpened = false;
 
     //receive ydoc updates
-    INTERNAL_MESSAGES.update.onMessageFromParent((e) => {
-      const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
-      Y.applyUpdate(this.ydoc, data);
-    }, false);
+    this.onMessage(
+      INTERNAL_MESSAGES.update,
+      (e) => {
+        const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
+        Y.applyUpdate(this.ydoc, data);
+      },
+      false
+    );
 
     //send ydoc updates
     this.ydoc.on('update', (update) => {
@@ -20,7 +24,7 @@ export default class ParentConnection {
 
     //wait for parent to initialize connection
     const open = INTERNAL_MESSAGES.open;
-    open.onMessageFromParent((data) => {
+    this.onMessage(open, (data) => {
       this.hash = open.convertSent(data.detail);
       this.sendResponse(open);
     });
@@ -54,5 +58,14 @@ export default class ParentConnection {
       this.sendMessage(message, data);
     });
     return promise;
+  }
+
+  //onEvent functions
+  onMessage(message, func, once = false) {
+    document.addEventListener(message.getTextFromParent(), func, { once: once });
+  }
+
+  onResponse(message, func, once = false) {
+    document.addEventListener(message.getResponseTextFromParent(), func, { once: once });
   }
 }
