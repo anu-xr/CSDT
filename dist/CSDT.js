@@ -531,11 +531,11 @@ class Connection {
     });
     this.iframe.contentDocument.dispatchEvent(event);
   }
-  sendMessageWithResponse(message, data) {
+  sendMessageWithResponse(message, data, convert = true) {
     const responseText = message.getResponseTextFromChild(this.hash);
     const promise = new Promise(resolve => {
       document.addEventListener(responseText, e => {
-        const d = message.convertResponse(e.detail);
+        const d = convert === true ? message.convertResponse(e.detail) : e.detail;
         resolve(d);
       }, {
         once: true
@@ -545,7 +545,7 @@ class Connection {
     return promise;
   }
   /*onEvent functions*/
-  onMessage(message, func, convert = false, once = false) {
+  onMessage(message, func, once = false, convert = true) {
     document.addEventListener(message.getTextFromChild(this.hash), e => {
       const data = convert === true ? message.convertSent(e.detail) : e.detail;
       func(data);
@@ -553,7 +553,7 @@ class Connection {
       once: once
     });
   }
-  onResponse(message, func, convert = false, once = false) {
+  onResponse(message, func, once = false, convert = true) {
     document.addEventListener(message.getResponseTextFromChild(this.hash), e => {
       const data = convert === true ? message.convertSent(e.detail) : e.detail;
       func(data);

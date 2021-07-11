@@ -48,13 +48,13 @@ export default class Connection {
     this.iframe.contentDocument.dispatchEvent(event);
   }
 
-  sendMessageWithResponse(message, data) {
+  sendMessageWithResponse(message, data, convert = true) {
     const responseText = message.getResponseTextFromChild(this.hash);
     const promise = new Promise((resolve) => {
       document.addEventListener(
         responseText,
         (e) => {
-          const d = message.convertResponse(e.detail);
+          const d = convert === true ? message.convertResponse(e.detail) : e.detail;
           resolve(d);
         },
         {
@@ -67,7 +67,7 @@ export default class Connection {
   }
 
   //onEvent functions
-  onMessage(message, func, convert = false, once = false) {
+  onMessage(message, func, once = false, convert = true) {
     document.addEventListener(
       message.getTextFromChild(this.hash),
       (e) => {
@@ -78,7 +78,7 @@ export default class Connection {
     );
   }
 
-  onResponse(message, func, convert = false, once = false) {
+  onResponse(message, func, once = false, convert = true) {
     document.addEventListener(
       message.getResponseTextFromChild(this.hash),
       (e) => {
