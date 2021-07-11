@@ -13,6 +13,7 @@ export default class ConnectionManager {
     const connection = new Connection(url);
     if (this.connections[id]) this.closeConnection(id);
     this.connections[id] = connection;
+    return connection;
   }
 
   closeConnection(id) {

@@ -474,6 +474,7 @@ class ConnectionManager {
     const connection = new _ConnectionDefault.default(url);
     if (this.connections[id]) this.closeConnection(id);
     this.connections[id] = connection;
+    return connection;
   }
   closeConnection(id) {
     this.connections[id].iframe.remove();
