@@ -480,8 +480,8 @@ class ConnectionManager {
     this.connections[id].iframe.remove();
     delete this.connections[id];
   }
-  createMessage(id, text, expectsResponse, sentDataType, responseDataType) {
-    const message = new _MessageDefault.default(text, expectsResponse, sentDataType, responseDataType);
+  createMessage(id, text, sentDataType, responseDataType) {
+    const message = new _MessageDefault.default(text, sentDataType, responseDataType);
     this.messages[id] = message;
   }
 }
@@ -17005,9 +17005,8 @@ var _parcelHelpers = require("@parcel/transformer-js/lib/esmodule-helpers.js");
 _parcelHelpers.defineInteropFlag(exports);
 var _helpers = require('./helpers');
 class Message {
-  constructor(text, expectsResponse, sentDataType, responseDataType) {
+  constructor(text, sentDataType, responseDataType) {
     this.text = String(text);
-    this.expectsResponse = Boolean(expectsResponse);
     this.responseText = `${this.text}-response`;
     this.sentDataType = String(sentDataType);
     this.responseDataType = String(responseDataType);

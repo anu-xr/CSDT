@@ -1,9 +1,8 @@
 import { convertType } from './helpers';
 
 export default class Message {
-  constructor(text, expectsResponse, sentDataType, responseDataType) {
+  constructor(text, sentDataType, responseDataType) {
     this.text = String(text);
-    this.expectsResponse = Boolean(expectsResponse);
     this.responseText = `${this.text}-response`;
     this.sentDataType = String(sentDataType);
     this.responseDataType = String(responseDataType);

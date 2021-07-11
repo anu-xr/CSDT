@@ -21,8 +21,8 @@ export default class ConnectionManager {
     delete this.connections[id];
   }
 
-  createMessage(id, text, expectsResponse, sentDataType, responseDataType) {
-    const message = new Message(text, expectsResponse, sentDataType, responseDataType);
+  createMessage(id, text, sentDataType, responseDataType) {
+    const message = new Message(text, sentDataType, responseDataType);
     this.messages[id] = message;
   }
 }
