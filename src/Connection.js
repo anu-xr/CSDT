@@ -16,7 +16,7 @@ export default class Connection {
       (data) => {
         Y.applyUpdate(this.ydoc, data);
       },
-      true
+      false
     );
 
     //send ydoc updates

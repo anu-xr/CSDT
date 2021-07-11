@@ -13,7 +13,7 @@ export default class ParentConnection {
       (data) => {
         Y.applyUpdate(this.ydoc, data);
       },
-      true
+      false
     );
 
     //send ydoc updates
@@ -23,14 +23,10 @@ export default class ParentConnection {
 
     //wait for parent to initialize connection
     const open = INTERNAL_MESSAGES.open;
-    this.onMessage(
-      open,
-      (data) => {
-        this.hash = data;
-        this.sendResponse(open);
-      },
-      true
-    );
+    this.onMessage(open, (data) => {
+      this.hash = data;
+      this.sendResponse(open);
+    });
   }
 
   sendResponse(message, data) {

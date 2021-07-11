@@ -503,7 +503,7 @@ class Connection {
     // receive ydoc updates
     this.onMessage(_constants.INTERNAL_MESSAGES.update, data => {
       _yjs.applyUpdate(this.ydoc, data);
-    }, true);
+    }, false);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);
@@ -17055,7 +17055,7 @@ class ParentConnection {
     // receive ydoc updates
     this.onMessage(_constants.INTERNAL_MESSAGES.update, data => {
       _yjs.applyUpdate(this.ydoc, data);
-    }, true);
+    }, false);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);
@@ -17065,7 +17065,7 @@ class ParentConnection {
     this.onMessage(open, data => {
       this.hash = data;
       this.sendResponse(open);
-    }, true);
+    });
   }
   sendResponse(message, data) {
     const text = message.getResponseTextFromChild(this.hash);
