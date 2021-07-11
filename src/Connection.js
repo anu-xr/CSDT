@@ -13,11 +13,10 @@ export default class Connection {
     //receive ydoc updates
     this.onMessage(
       INTERNAL_MESSAGES.update,
-      (e) => {
-        const data = INTERNAL_MESSAGES.update.convertSent(e.detail);
+      (data) => {
         Y.applyUpdate(this.ydoc, data);
       },
-      false
+      true
     );
 
     //send ydoc updates
@@ -68,11 +67,25 @@ export default class Connection {
   }
 
   //onEvent functions
-  onMessage(message, func, once = false) {
-    document.addEventListener(message.getTextFromChild(this.hash), func, { once: once });
+  onMessage(message, func, convert = false, once = false) {
+    document.addEventListener(
+      message.getTextFromChild(this.hash),
+      (e) => {
+        const data = convert === true ? message.convertSent(e.detail) : e.detail;
+        func(data);
+      },
+      { once: once }
+    );
   }
 
-  onResponse(message, func, once = false) {
-    document.addEventListener(message.getResponseTextFromChild(this.hash), func, { once: once });
+  onResponse(message, func, convert = false, once = false) {
+    document.addEventListener(
+      message.getResponseTextFromChild(this.hash),
+      (e) => {
+        const data = convert === true ? message.convertSent(e.detail) : e.detail;
+        func(data);
+      },
+      { once: once }
+    );
   }
 }

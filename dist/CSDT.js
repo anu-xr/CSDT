@@ -501,10 +501,9 @@ class Connection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    this.onMessage(_constants.INTERNAL_MESSAGES.update, e => {
-      const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
+    this.onMessage(_constants.INTERNAL_MESSAGES.update, data => {
       _yjs.applyUpdate(this.ydoc, data);
-    }, false);
+    }, true);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);
@@ -546,13 +545,19 @@ class Connection {
     return promise;
   }
   /*onEvent functions*/
-  onMessage(message, func, once = false) {
-    document.addEventListener(message.getTextFromChild(this.hash), func, {
+  onMessage(message, func, convert = false, once = false) {
+    document.addEventListener(message.getTextFromChild(this.hash), e => {
+      const data = convert === true ? message.convertSent(e.detail) : e.detail;
+      func(data);
+    }, {
       once: once
     });
   }
-  onResponse(message, func, once = false) {
-    document.addEventListener(message.getResponseTextFromChild(this.hash), func, {
+  onResponse(message, func, convert = false, once = false) {
+    document.addEventListener(message.getResponseTextFromChild(this.hash), e => {
+      const data = convert === true ? message.convertSent(e.detail) : e.detail;
+      func(data);
+    }, {
       once: once
     });
   }
@@ -17048,10 +17053,9 @@ class ParentConnection {
     this.ydoc = new _yjs.Doc();
     this.connectionOpened = false;
     // receive ydoc updates
-    this.onMessage(_constants.INTERNAL_MESSAGES.update, e => {
-      const data = _constants.INTERNAL_MESSAGES.update.convertSent(e.detail);
+    this.onMessage(_constants.INTERNAL_MESSAGES.update, data => {
       _yjs.applyUpdate(this.ydoc, data);
-    }, false);
+    }, true);
     // send ydoc updates
     this.ydoc.on('update', update => {
       this.sendMessage(_constants.INTERNAL_MESSAGES.update, update);
@@ -17059,9 +17063,9 @@ class ParentConnection {
     // wait for parent to initialize connection
     const open = _constants.INTERNAL_MESSAGES.open;
     this.onMessage(open, data => {
-      this.hash = open.convertSent(data.detail);
+      this.hash = data;
       this.sendResponse(open);
-    });
+    }, true);
   }
   sendResponse(message, data) {
     const text = message.getResponseTextFromChild(this.hash);
