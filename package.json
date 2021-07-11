@@ -13,8 +13,8 @@
     "dist/*.js*"
   ],
   "scripts": {
-    "build": "parcel build src/ConnectionManager.js",
-    "watch": "parcel watch src/ConnectionManager.js"
+    "build": "parcel build src/CSDT.js",
+    "watch": "parcel watch src/CSDT.js"
   },
   "dependencies": {
     "yjs": "^13.5.8"
