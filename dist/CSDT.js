@@ -17081,11 +17081,11 @@ class ParentConnection {
     });
     parent.document.dispatchEvent(event);
   }
-  sendMessageWithResponse(message, data) {
+  sendMessageWithResponse(message, data, convert = true) {
     const responseText = message.getResponseTextFromChild(this.hash);
     const promise = new Promise(resolve => {
       document.addEventListener(responseText, e => {
-        const d = message.convertResponse(e.detail);
+        const d = convert === true ? message.convertResponse(e.detail) : e.detail;
         resolve(d);
       }, {
         once: true
@@ -17095,13 +17095,19 @@ class ParentConnection {
     return promise;
   }
   /*onEvent functions*/
-  onMessage(message, func, once = false) {
-    document.addEventListener(message.getTextFromParent(), func, {
+  onMessage(message, func, once = false, convert = true) {
+    document.addEventListener(message.getTextFromParent(), e => {
+      const data = convert === true ? message.convertSent(e.detail) : e.detail;
+      func(data);
+    }, {
       once: once
     });
   }
-  onResponse(message, func, once = false) {
-    document.addEventListener(message.getResponseTextFromParent(), func, {
+  onResponse(message, func, once = false, convert = true) {
+    document.addEventListener(message.getResponseTextFromParent(), e => {
+      const data = convert === true ? message.convertResponse(e.detail) : e.detail;
+      func(data);
+    }, {
       once: once
     });
   }
