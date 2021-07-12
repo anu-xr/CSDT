@@ -4,7 +4,7 @@ An expiremental library for standardizing communication across iframes.
 
 ## About
 
-- Sites create a `ConnectionManager` object, then use it as an API to send or recieve information from other pages that also implement it.
+- Sites import the `CSDT` object, then use it as an API to send or recieve information from other pages that also implement it.
 
 - [yjs](https://github.com/yjs/yjs#readme) can be used to synchronize data - allowing for easy to use, real-time coordination between the sites.
 
