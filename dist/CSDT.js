@@ -471,8 +471,8 @@ class ConnectionManager {
     };
   }
   openConnection(url, id) {
-    const connection = new _ConnectionDefault.default(url);
     if (this.connections[id]) this.closeConnection(id);
+    const connection = new _ConnectionDefault.default(url);
     this.connections[id] = connection;
     return connection;
   }
