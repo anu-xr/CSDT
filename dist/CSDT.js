@@ -16996,8 +16996,8 @@ _parcelHelpers.export(exports, "INTERNAL_MESSAGES", function () {
 var _Message = require('./Message');
 var _MessageDefault = _parcelHelpers.interopDefault(_Message);
 const INTERNAL_MESSAGES = {
-  open: new _MessageDefault.default('open-connection', false, 'string', null),
-  update: new _MessageDefault.default('ydoc-update', false, 'uint8array', null)
+  open: new _MessageDefault.default('open-connection', 'string', null),
+  update: new _MessageDefault.default('ydoc-update', 'uint8array', null)
 };
 
 },{"./Message":"7sBfv","@parcel/transformer-js/lib/esmodule-helpers.js":"5gA8y"}],"7sBfv":[function(require,module,exports) {
