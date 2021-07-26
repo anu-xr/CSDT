@@ -1,12 +1,17 @@
 export function addIframe(url) {
+  const div = document.createElement('div');
+  div.style.overflow = 'hidden';
+  div.style.position = 'relative';
+
   const iframe = document.createElement('iframe');
   iframe.src = url;
-  iframe.style.display = 'none';
-  iframe.style.position = 'absolute';
-  iframe.style.width = '0';
-  iframe.style.height = '0';
-  iframe.style.border = '0';
-  document.body.appendChild(iframe);
+  iframe.style.position = 'fixed';
+  iframe.style.width = '100%';
+  iframe.style.height = '100%';
+  iframe.style.left = '100%';
+
+  div.appendChild(iframe);
+  document.body.appendChild(div);
 
   return iframe;
 }
